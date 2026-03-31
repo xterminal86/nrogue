@@ -252,6 +252,18 @@ class MapLevelBase
                    DoorMaterials doorMaterial = DoorMaterials::WOOD,
                    DoorGraphicType doorType = DoorGraphicType::UNDEFINED);
 
+    void Paint(int x,
+               int y,
+               GraphicTiles tile,
+               uint8_t flipMask = GlobalConstants::FlipMaskNone,
+               uint16_t rotation = 0);
+    void PaintBigStar(int x, int y);
+    void PaintTileBorders(const Position& from,
+                          const Position& to,
+                          GraphicTiles corner,
+                          GraphicTiles line,
+                          GraphicTiles filler = GraphicTiles::NONE);
+
     friend class Map;
 
 #ifdef DEBUG_BUILD

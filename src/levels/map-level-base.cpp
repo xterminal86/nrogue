@@ -1530,3 +1530,145 @@ void MapLevelBase::CreateSpecialObjects(int x,
     break;
   }
 }
+
+// =============================================================================
+
+void MapLevelBase::Paint(int x,
+                         int y,
+                         GraphicTiles tile,
+                         uint8_t flipMask,
+                         uint16_t rotation)
+{
+  if (!Util::IsInsideMap({ x, y }, MapSize))
+  {
+    return;
+  }
+
+  MapArray[x][y]->Graphic.Tile            = tile;
+  MapArray[x][y]->Graphic.FlipMask        = flipMask;
+  MapArray[x][y]->Graphic.RotationDegrees = rotation;
+}
+
+// =============================================================================
+
+void MapLevelBase::PaintBigStar(int x, int y)
+{
+  if (!Util::IsInsideMap({ x, y }, MapSize))
+  {
+    return;
+  }
+
+  Paint(x,
+        y,
+        GraphicTiles::TILE_STAR_BIG_CORNER,
+        GlobalConstants::FlipMaskV);
+
+  Paint(x + 1,
+        y,
+        GraphicTiles::TILE_STAR_BIG_MIDDLE,
+        GlobalConstants::FlipMaskV);
+
+  Paint(x + 2,
+        y,
+        GraphicTiles::TILE_STAR_BIG_CORNER,
+        (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV));
+
+  Paint(x,
+        y + 1,
+        GraphicTiles::TILE_STAR_BIG_MIDDLE,
+        GlobalConstants::FlipMaskNone,
+        90);
+
+  Paint(x + 1, y + 1, GraphicTiles::TILE_STAR_BIG_CENTER);
+
+  Paint(x + 2,
+        y + 1,
+        GraphicTiles::TILE_STAR_BIG_MIDDLE,
+        GlobalConstants::FlipMaskNone,
+        270);
+
+  Paint(x,     y + 2, GraphicTiles::TILE_STAR_BIG_CORNER);
+  Paint(x + 1, y + 2, GraphicTiles::TILE_STAR_BIG_MIDDLE);
+  Paint(x + 2, y + 2, GraphicTiles::TILE_STAR_BIG_CORNER,
+        GlobalConstants::FlipMaskH);
+}
+
+// =============================================================================
+
+void MapLevelBase::PaintTileBorders(const Position& from,
+                                    const Position& to,
+                                    GraphicTiles corner,
+                                    GraphicTiles line,
+                                    GraphicTiles filler)
+{
+  int lx = from.X;
+  int ly = from.Y;
+  int hx = to.X;
+  int hy = to.Y;
+
+  auto ValidateCoords = [this](int& x, int& y)
+  {
+    if (x < 0)               x = 0;
+    if (x > (MapSize.X - 1)) x = MapSize.X - 1;
+    if (y < 0)               y = 0;
+    if (y > (MapSize.Y - 1)) y = MapSize.Y - 1;
+  };
+
+  ValidateCoords(lx, ly);
+  ValidateCoords(hx, hy);
+
+  if (lx > hx) std::swap(lx, hx);
+  if (ly > hy) std::swap(ly, hy);
+
+  auto perimeter = Util::GetPerimeter(lx, ly, hx, hy);
+  for (const Position& p : perimeter)
+  {
+    bool cornerUL = (p.X == lx && p.Y == ly);
+    bool cornerUR = (p.X == hx && p.Y == ly);
+    bool cornerDR = (p.X == hx && p.Y == hy);
+    bool cornerDL = (p.X == lx && p.Y == hy);
+    bool upperStripH = (p.X > lx && p.X < hx) && (p.Y == ly);
+    bool lowerStripH = (p.X > lx && p.X < hx) && (p.Y == hy);
+    bool leftStripV  = (p.X == lx) && (p.Y > ly && p.Y < hy);
+    bool rightStripV  = (p.X == hx) && (p.Y > ly && p.Y < hy);
+
+    if (cornerUL)
+    {
+      Paint(p.X, p.Y, corner);
+    }
+    else if (cornerUR)
+    {
+      Paint(p.X, p.Y, corner, GlobalConstants::FlipMaskH);
+    }
+    else if (cornerDR)
+    {
+      Paint(p.X,
+            p.Y,
+            corner,
+            (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV));
+    }
+    else if (cornerDL)
+    {
+      Paint(p.X, p.Y, corner, GlobalConstants::FlipMaskV);
+    }
+    else if (upperStripH || lowerStripH)
+    {
+      Paint(p.X, p.Y, line);
+    }
+    else if (leftStripV || rightStripV)
+    {
+      Paint(p.X, p.Y, line, GlobalConstants::FlipMaskNone, 90);
+    }
+  }
+
+  if (filler != GraphicTiles::NONE)
+  {
+    for (int x = lx + 1; x <= hx - 1; x++)
+    {
+      for (int y = ly + 1; y <= hy - 1; y++)
+      {
+        Paint(x, y, filler);
+      }
+    }
+  }
+}

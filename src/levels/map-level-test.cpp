@@ -151,110 +151,20 @@ void MapLevelTest::CreateLevel()
                 Colors::White,
                 Colors::ShadesOfGrey::Six,
                 Strings::TileNames::Rocks,
-                GraphicTiles::STONES);
+                GraphicTiles::STONE_BRICK);
 
-  auto Paint = [this](int x, 
-                      int y, 
-                      GraphicTiles tile, 
-                      uint8_t flipMask = GlobalConstants::FlipMaskNone, 
-                      uint16_t rotation = 0)
-  {
-    MapArray[x][y]->Graphic.Tile            = tile;
-    MapArray[x][y]->Graphic.FlipMask        = flipMask;
-    MapArray[x][y]->Graphic.RotationDegrees = rotation;
-  };
+  PaintTileBorders({ 1, 1 },
+                   { MapSize.X - 2, MapSize.Y - 2 },
+                   GraphicTiles::TILE_DIAMOND_BROWN_CORNER,
+                   GraphicTiles::TILE_DIAMOND_BROWN_H,
+                   GraphicTiles::TILES_GREEN_WHITE_DIAG);
 
-  auto perimeter = Util::GetPerimeter(1, 1, MapSize.X - 2, MapSize.Y - 2);
-  for (const Position& p : perimeter)
-  {
-    bool cornerUL = (p.X == 1 && p.Y == 1);
-    bool cornerUR = (p.X == (MapSize.X - 2) && p.Y == 1);
-    bool cornerDR = (p.X == (MapSize.X - 2) && p.Y == (MapSize.Y - 2));
-    bool cornerDL = (p.X == 1 && p.Y == (MapSize.Y - 2));
-    bool upperStripH = (p.X > 1 && p.X < MapSize.X - 2) && (p.Y == 1);
-    bool lowerStripH = (p.X > 1 && p.X < MapSize.X - 2) && (p.Y == (MapSize.Y - 2));
-    bool leftStripV  = (p.X == 1) && (p.Y > 1 && p.Y < MapSize.Y - 2);
-    bool rightStripV  = (p.X == (MapSize.X - 2)) && (p.Y > 1 && p.Y < MapSize.Y - 2);
+  PaintTileBorders({ MapSize.X / 2 - 2, MapSize.Y / 2 - 2 },
+                   { MapSize.X / 2 + 2, MapSize.Y / 2 + 2 },
+                   GraphicTiles::TILE_DIAMOND_BROWN_CORNER,
+                   GraphicTiles::TILE_DIAMOND_BROWN_H);
 
-    if (cornerUL)
-    {      
-      Paint(p.X, p.Y, GraphicTiles::TILE_DIAMOND_BROWN_CORNER);
-    }
-    else if (cornerUR)
-    {
-      Paint(p.X, 
-            p.Y, 
-            GraphicTiles::TILE_DIAMOND_BROWN_CORNER, 
-            GlobalConstants::FlipMaskH);
-    }
-    else if (cornerDR)
-    {
-      Paint(p.X, 
-            p.Y, 
-            GraphicTiles::TILE_DIAMOND_BROWN_CORNER, 
-            (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV));
-    }
-    else if (cornerDL)
-    {
-      Paint(p.X, 
-            p.Y, 
-            GraphicTiles::TILE_DIAMOND_BROWN_CORNER, 
-            GlobalConstants::FlipMaskV);
-    }
-    else if (upperStripH || lowerStripH)
-    {
-      Paint(p.X, p.Y, GraphicTiles::TILE_DIAMOND_BROWN_H);
-    }
-    else if (leftStripV || rightStripV)
-    {
-      Paint(p.X, 
-            p.Y, 
-            GraphicTiles::TILE_DIAMOND_BROWN_H, 
-            GlobalConstants::FlipMaskNone, 
-            90);
-    }
-  }
-
-  for (int x = 2; x <= MapSize.X - 3; x++)
-  {
-    for (int y = 2; y <= MapSize.Y - 3; y++)
-    {
-      Paint(x, y, GraphicTiles::TILES_GREEN_WHITE_DIAG);
-    }
-  }
-
-  Paint(2, 
-        2, 
-        GraphicTiles::TILE_STAR_BIG_CORNER, 
-        GlobalConstants::FlipMaskV);
-
-  Paint(3,
-        2,
-        GraphicTiles::TILE_STAR_BIG_MIDDLE,
-        GlobalConstants::FlipMaskV);
-  
-  Paint(4,
-        2,
-        GraphicTiles::TILE_STAR_BIG_CORNER,
-        (GlobalConstants::FlipMaskH | GlobalConstants::FlipMaskV));
-
-  Paint(2,
-        3,
-        GraphicTiles::TILE_STAR_BIG_MIDDLE,
-        GlobalConstants::FlipMaskNone,
-        90);
-
-  Paint(3, 3, GraphicTiles::TILE_STAR_BIG_CENTER);
-
-  Paint(4,
-        3,
-        GraphicTiles::TILE_STAR_BIG_MIDDLE,
-        GlobalConstants::FlipMaskNone,
-        270);
-
-  Paint(2, 4, GraphicTiles::TILE_STAR_BIG_CORNER);
-  Paint(3, 4, GraphicTiles::TILE_STAR_BIG_MIDDLE);  
-  Paint(4, 4, GraphicTiles::TILE_STAR_BIG_CORNER, GlobalConstants::FlipMaskH);
+  PaintBigStar(MapSize.X / 2 - 1, MapSize.Y / 2 - 1);
 
   CreateStuff();
 }
