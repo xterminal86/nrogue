@@ -313,6 +313,132 @@ void TestUtils(std::stringstream& ss)
       }
     }
   }
+  // ---------------------------------------------------------------------------
+  {
+    ss << "Util::GetTileType()...\n";
+
+    auto DumpLayout = [&ss](const StringV& layout)
+    {
+      for (auto& row : layout)
+      {
+        ss << row << "\n";
+      }
+    };
+
+    auto TestCase =
+    [&ss](int x, int y, char image, const StringV& layout, TileType expected)
+    {
+      TileType actual = Util::GetTileType(x, y, image, layout);
+      ss << Util::StringFormat("'%c' (%2d, %2d) == %3d?   ->   ",
+                               image, x, y, (int)expected);
+      ss << (
+              (actual == expected) ?
+              Util::StringFormat("%3d OK\n", (int)actual) :
+              Util::StringFormat("%3d *** FAILED ***\n", actual)
+            );
+    };
+
+    {
+      StringV layout =
+      {
+        "#....####",
+        "...#.#..#",
+        ".#.#.#..#",
+        "###..####",
+      };
+
+      DumpLayout(layout);
+
+      ss << "\n";
+
+      //
+      // '#'
+      //
+      TestCase(-1, -1, '#', layout, TileType::NOTHING);
+      TestCase(-1,  0, '#', layout, TileType::NOTHING);
+      TestCase( 4,  0, '#', layout, TileType::NOTHING);
+      TestCase( 4,  1, '#', layout, TileType::NOTHING);
+      TestCase( 2,  9, '#', layout, TileType::NOTHING);
+      TestCase( 3,  9, '#', layout, TileType::NOTHING);
+
+      TestCase(0, 0, '#', layout, TileType::FULL);
+      TestCase(0, 1, '#', layout, TileType::NOTHING);
+      TestCase(0, 2, '#', layout, TileType::NOTHING);
+      TestCase(0, 3, '#', layout, TileType::NOTHING);
+      TestCase(0, 4, '#', layout, TileType::NOTHING);
+      TestCase(0, 5, '#', layout, TileType::CORNER_DR);
+      TestCase(0, 6, '#', layout, TileType::LINE_H);
+      TestCase(0, 7, '#', layout, TileType::LINE_H);
+      TestCase(0, 8, '#', layout, TileType::CORNER_DL);
+      TestCase(1, 0, '#', layout, TileType::NOTHING);
+      TestCase(1, 1, '#', layout, TileType::NOTHING);
+      TestCase(1, 2, '#', layout, TileType::NOTHING);
+      TestCase(1, 3, '#', layout, TileType::LINE_VD);
+      TestCase(1, 4, '#', layout, TileType::NOTHING);
+      TestCase(1, 5, '#', layout, TileType::LINE_V);
+      TestCase(1, 6, '#', layout, TileType::NOTHING);
+      TestCase(1, 7, '#', layout, TileType::NOTHING);
+      TestCase(1, 8, '#', layout, TileType::LINE_V);
+      TestCase(2, 0, '#', layout, TileType::NOTHING);
+      TestCase(2, 1, '#', layout, TileType::LINE_VD);
+      TestCase(2, 2, '#', layout, TileType::NOTHING);
+      TestCase(2, 3, '#', layout, TileType::LINE_VU);
+      TestCase(2, 4, '#', layout, TileType::NOTHING);
+      TestCase(2, 5, '#', layout, TileType::LINE_V);
+      TestCase(2, 6, '#', layout, TileType::NOTHING);
+      TestCase(2, 7, '#', layout, TileType::NOTHING);
+      TestCase(2, 8, '#', layout, TileType::LINE_V);
+      TestCase(3, 0, '#', layout, TileType::LINE_HR);
+      TestCase(3, 1, '#', layout, TileType::T_JUNCTION_U);
+      TestCase(3, 2, '#', layout, TileType::LINE_HL);
+      TestCase(3, 3, '#', layout, TileType::NOTHING);
+      TestCase(3, 4, '#', layout, TileType::NOTHING);
+      TestCase(3, 5, '#', layout, TileType::CORNER_UR);
+      TestCase(3, 6, '#', layout, TileType::LINE_H);
+      TestCase(3, 7, '#', layout, TileType::LINE_H);
+      TestCase(3, 8, '#', layout, TileType::CORNER_UL);
+
+      //
+      // '.'
+      //
+      TestCase(0, 0, '.', layout, TileType::NOTHING);
+      TestCase(0, 1, '.', layout, TileType::CORNER_DR);
+      TestCase(0, 2, '.', layout, TileType::T_JUNCTION_D);
+      TestCase(0, 3, '.', layout, TileType::LINE_H);
+      TestCase(0, 4, '.', layout, TileType::CORNER_DL);
+      TestCase(0, 5, '.', layout, TileType::NOTHING);
+      TestCase(0, 6, '.', layout, TileType::NOTHING);
+      TestCase(0, 7, '.', layout, TileType::NOTHING);
+      TestCase(0, 8, '.', layout, TileType::NOTHING);
+      TestCase(1, 0, '.', layout, TileType::CORNER_DR);
+      TestCase(1, 1, '.', layout, TileType::T_JUNCTION_U);
+      TestCase(1, 2, '.', layout, TileType::T_JUNCTION_L);
+      TestCase(1, 3, '.', layout, TileType::NOTHING);
+      TestCase(1, 4, '.', layout, TileType::LINE_V);
+      TestCase(1, 5, '.', layout, TileType::NOTHING);
+      TestCase(1, 6, '.', layout, TileType::CORNER_DR);
+      TestCase(1, 7, '.', layout, TileType::CORNER_DL);
+      TestCase(1, 8, '.', layout, TileType::NOTHING);
+      TestCase(2, 0, '.', layout, TileType::LINE_VU);
+      TestCase(2, 1, '.', layout, TileType::NOTHING);
+      TestCase(2, 2, '.', layout, TileType::LINE_VU);
+      TestCase(2, 3, '.', layout, TileType::NOTHING);
+      TestCase(2, 4, '.', layout, TileType::LINE_V);
+      TestCase(2, 5, '.', layout, TileType::NOTHING);
+      TestCase(2, 6, '.', layout, TileType::CORNER_UR);
+      TestCase(2, 7, '.', layout, TileType::CORNER_UL);
+      TestCase(2, 8, '.', layout, TileType::NOTHING);
+      TestCase(3, 0, '.', layout, TileType::NOTHING);
+      TestCase(3, 1, '.', layout, TileType::NOTHING);
+      TestCase(3, 2, '.', layout, TileType::NOTHING);
+      TestCase(3, 3, '.', layout, TileType::LINE_HR);
+      TestCase(3, 4, '.', layout, TileType::CORNER_UL);
+      TestCase(3, 5, '.', layout, TileType::NOTHING);
+      TestCase(3, 6, '.', layout, TileType::NOTHING);
+      TestCase(3, 7, '.', layout, TileType::NOTHING);
+      TestCase(3, 8, '.', layout, TileType::NOTHING);
+    }
+  }
 }
 
 // =============================================================================

@@ -157,7 +157,7 @@ void MapLevelTest::CreateLevel()
                    { MapSize.X - 2, MapSize.Y - 2 },
                    GraphicTiles::TILE_DIAMOND_BROWN_CORNER,
                    GraphicTiles::TILE_DIAMOND_BROWN_H,
-                   GraphicTiles::TILES_GREEN_WHITE_DIAG);
+                   GraphicTiles::TILE_BIG_BLACK);
 
   PaintTileBorders({ MapSize.X / 2 - 2, MapSize.Y / 2 - 2 },
                    { MapSize.X / 2 + 2, MapSize.Y / 2 + 2 },
@@ -165,6 +165,8 @@ void MapLevelTest::CreateLevel()
                    GraphicTiles::TILE_DIAMOND_BROWN_H);
 
   PaintBigStar(MapSize.X / 2 - 1, MapSize.Y / 2 - 1);
+
+  PlaceWoodenFence({ 3, 3 }, { 10, 10 });
 
   CreateStuff();
 }

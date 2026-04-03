@@ -395,6 +395,11 @@ namespace Util
 
   extern uint16_t BoolFlagsToMask(const std::vector<bool>& traverse);
 
+  extern TileType GetTileType(int arrayX,
+                              int arrayY,
+                              char tileImage,
+                              const StringV& mapLayout);
+
   // ===========================================================================
 
   //

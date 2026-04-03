@@ -134,6 +134,84 @@ namespace Util
 
   // ===========================================================================
 
+  TileType GetTileType(int mapPosX,
+                       int mapPosY,
+                       char tileImage,
+                       const StringV& mapLayout)
+  {
+    static const std::unordered_map<unsigned long, TileType> tileTypeByMask =
+    {
+        { (unsigned long)TileType::NOTHING,      TileType::NOTHING      }
+      , { (unsigned long)TileType::LINE_VU,      TileType::LINE_VU      }
+      , { (unsigned long)TileType::LINE_VD,      TileType::LINE_VD      }
+      , { (unsigned long)TileType::LINE_V,       TileType::LINE_V       }
+      , { (unsigned long)TileType::LINE_HL,      TileType::LINE_HL      }
+      , { (unsigned long)TileType::LINE_HR,      TileType::LINE_HR      }
+      , { (unsigned long)TileType::LINE_H,       TileType::LINE_H       }
+      , { (unsigned long)TileType::CORNER_UL,    TileType::CORNER_UL    }
+      , { (unsigned long)TileType::CORNER_UR,    TileType::CORNER_UR    }
+      , { (unsigned long)TileType::CORNER_DR,    TileType::CORNER_DR    }
+      , { (unsigned long)TileType::CORNER_DL,    TileType::CORNER_DL    }
+      , { (unsigned long)TileType::T_JUNCTION_D, TileType::T_JUNCTION_D }
+      , { (unsigned long)TileType::T_JUNCTION_U, TileType::T_JUNCTION_U }
+      , { (unsigned long)TileType::T_JUNCTION_L, TileType::T_JUNCTION_L }
+      , { (unsigned long)TileType::T_JUNCTION_R, TileType::T_JUNCTION_R }
+    };
+
+    std::bitset<9> mask;
+
+    TileType res = TileType::NOTHING;
+
+    Position size =
+    {
+      (int)mapLayout.size(),
+      (int)(mapLayout.empty() ? 0 : mapLayout[0].size())
+    };
+
+    size_t bitPos = 8;
+    for (int x = mapPosX - 1; x <= mapPosX + 1; x++)
+    {
+      for (int y = mapPosY - 1; y <= mapPosY + 1; y++)
+      {
+        if (!IsInsideMap({ x, y }, size, false))
+        {
+          mask.set(bitPos, false);
+        }
+        else
+        {
+          mask.set(bitPos, (mapLayout[x][y] == tileImage));
+        }
+
+        bitPos--;
+      }
+    }
+
+    //
+    // Corners are ignored.
+    //
+    mask.set(0, false);
+    mask.set(2, false);
+    mask.set(6, false);
+    mask.set(8, false);
+
+    if (mask.test(4) == false)
+    {
+      res = TileType::NOTHING;
+    }
+    else
+    {
+      auto value = mask.to_ulong();
+
+      res = (tileTypeByMask.count(value) == 1) ?
+            tileTypeByMask.at(value) :
+            TileType::FULL;
+    }
+
+    return res;
+  }
+
+  // ===========================================================================
+
   bool IsObjectInRange(GameObject* checker,
                        GameObject* checked,
                        int range)

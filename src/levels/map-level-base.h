@@ -263,6 +263,8 @@ class MapLevelBase
                           GraphicTiles corner,
                           GraphicTiles line,
                           GraphicTiles filler = GraphicTiles::NONE);
+    void PlaceWoodenFence(const Position& from,
+                          const Position& to);
 
     friend class Map;
 

@@ -1096,6 +1096,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
         {
           PlaceGrassTile(posX, posY, -1);
 
+          /*
           t.Set(true,
                 false,
                 '#',
@@ -1105,6 +1106,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
                 Strings::Empty);
           t.SetGraphics(GraphicTiles::FENCE_WOODEN);
           PlaceStaticObject(posX, posY, t);
+          */
         }
         break;
 

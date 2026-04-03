@@ -1672,3 +1672,76 @@ void MapLevelBase::PaintTileBorders(const Position& from,
     }
   }
 }
+
+// =============================================================================
+
+void MapLevelBase::PlaceWoodenFence(const Position& from, const Position& to)
+{
+  int lx = from.X;
+  int ly = from.Y;
+  int hx = to.X;
+  int hy = to.Y;
+
+  auto ValidateCoords = [this](int& x, int& y)
+  {
+    if (x < 0)               x = 0;
+    if (x > (MapSize.X - 1)) x = MapSize.X - 1;
+    if (y < 0)               y = 0;
+    if (y > (MapSize.Y - 1)) y = MapSize.Y - 1;
+  };
+
+  ValidateCoords(lx, ly);
+  ValidateCoords(hx, hy);
+
+  if (lx > hx) std::swap(lx, hx);
+  if (ly > hy) std::swap(ly, hy);
+
+  GameObjectInfo goi;
+  goi.Set(true,
+          false,
+          '#',
+          Colors::Wood,
+          Colors::None,
+          Strings::TileNames::WoodenFence,
+          Strings::Empty);
+
+  goi.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_UP);
+  PlaceStaticObject(lx, ly, goi);
+
+  goi.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_DOWN);
+  PlaceStaticObject(lx, hy, goi);
+
+  goi.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_DOWN,
+                  Colors::White,
+                  1.0,
+                  0,
+                  GlobalConstants::FlipMaskH);
+  PlaceStaticObject(hx, hy, goi);
+
+  goi.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_UP,
+                  Colors::White,
+                  1.0,
+                  0,
+                  GlobalConstants::FlipMaskH);
+  PlaceStaticObject(hx, ly, goi);
+
+  goi.SetGraphics(GraphicTiles::FENCE_WOODEN);
+  for (int x = lx + 1; x <= hx - 1; x++)
+  {
+    PlaceStaticObject(x, ly, goi);
+    PlaceStaticObject(x, hy, goi);
+  }
+
+  for (int y = ly + 1; y <= hy - 1; y++)
+  {
+    goi.SetGraphics(GraphicTiles::FENCE_WOODEN_V);
+    PlaceStaticObject(lx, y, goi);
+
+    goi.SetGraphics(GraphicTiles::FENCE_WOODEN_V,
+                    Colors::White,
+                    1.0,
+                    0,
+                    GlobalConstants::FlipMaskH);
+    PlaceStaticObject(hx, y, goi);
+  }
+}
