@@ -262,7 +262,10 @@ void MapLevelMines::CreateSpecialLevel()
                     Colors::Black,
                     Colors::ShadesOfGrey::Six,
                     Strings::TileNames::MineWall,
-                    false);
+                    false,
+                    Util::Rolld100(50) ?
+                    GraphicTiles::WALL_MINE :
+                    GraphicTiles::WALL_MINE2);
         }
         break;
 
@@ -349,7 +352,8 @@ void MapLevelMines::CreateSpecialLevel()
                           Colors::Black,
                           Colors::ShadesOfGrey::Six,
                           Strings::TileNames::MineWall,
-                          false);
+                          false,
+                          GraphicTiles::GRAVEL);
               }
             }
 
@@ -385,13 +389,49 @@ void MapLevelMines::CreateSpecialLevel()
         break;
 
         case 'b':
-          PlaceGroundTile(posX,
-                          posY,
-                          '.',
-                          Colors::Red,
-                          Colors::Black,
-                          Strings::TileNames::Blood);
-          break;
+        {
+          if (Game::gApp.AppData.UseGraphics)
+          {
+            PlaceGroundTile(posX,
+                            posY,
+                            c,
+                            Colors::ShadesOfGrey::Four,
+                            Colors::Black,
+                            Strings::TileNames::Ground,
+                            GraphicTiles::DIRT);
+
+            GameObject* blood =
+                Game::gGOF.CreateDummyObject(posX,
+                                             posY,
+                                             Strings::TileNames::Blood,
+                                             '.',
+                                             Colors::Red,
+                                             Colors::None);
+
+            static const std::unordered_map<GraphicTiles, int> bloodTiles =
+            {
+                {GraphicTiles::BLOOD_RED,    3 }
+              , {GraphicTiles::BLOOD_SPLAT,  9 }
+              , {GraphicTiles::BLOOD_SPLAT2, 9 }
+            };
+
+            auto r = Util::WeightedRandom(bloodTiles);
+
+            blood->Graphic.Tile = r.first;
+
+            PlaceGameObject(blood);
+          }
+          else
+          {
+            PlaceGroundTile(posX,
+                            posY,
+                            '.',
+                            Colors::Red,
+                            Colors::Black,
+                            Strings::TileNames::Blood);
+          }
+        }
+        break;
 
         case '%':
           PlaceGroundTile(posX,
@@ -416,7 +456,8 @@ void MapLevelMines::CreateSpecialLevel()
                           c,
                           Colors::ShadesOfGrey::Four,
                           Colors::Black,
-                          Strings::TileNames::Ground);
+                          Strings::TileNames::Ground,
+                          GraphicTiles::DIRT);
           break;
       }
 
@@ -582,9 +623,7 @@ void MapLevelMines::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
                       Colors::ShadesOfGrey::Two :
                       Colors::ShadesOfGrey::Fourteen,
                       Strings::TileNames::TiledFloor,
-                      (image == '1') ?
-                      GraphicTiles::TILE_BIG_BLACK :
-                      GraphicTiles::TILE_BIG_WHITE);
+                      GraphicTiles::TILES_BW);
       break;
   }
 }

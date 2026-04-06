@@ -168,6 +168,23 @@ void MapLevelTest::CreateLevel()
 
   PlaceWoodenFence({ 3, 3 }, { 10, 10 });
 
+  auto PaintBlood = [this](int x, int y, GraphicTiles tile)
+  {
+    GameObject* blood = Game::gGOF.CreateDummyObject(x,
+                                                     y,
+                                                     "blood",
+                                                     ' ',
+                                                     Colors::White,
+                                                     Colors::None);
+    blood->Graphic.Tile = tile;
+    PlaceGameObject(blood);
+  };
+
+  PaintBlood(2, 2, GraphicTiles::BLOOD_RED);
+  PaintBlood(3, 2, GraphicTiles::BLOOD_SPLAT);
+  PaintBlood(4, 2, GraphicTiles::BLOOD_SPLAT2);
+  PaintBlood(5, 2, GraphicTiles::BLOOD_SPLAT3);
+
   CreateStuff();
 }
 

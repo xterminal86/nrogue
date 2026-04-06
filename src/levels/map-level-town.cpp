@@ -1095,67 +1095,6 @@ void MapLevelTown::PlaceGarden(int x, int y)
         case '#':
         {
           PlaceGrassTile(posX, posY, -1);
-
-          t.Set(true,
-                false,
-                '#',
-                Colors::Wood,
-                Colors::Grass,
-                Strings::TileNames::WoodenFence,
-                Strings::Empty);
-
-          TileType tt = Util::GetTileType(posY - y,
-                                          posX - x,
-                                          '#',
-                                          _layoutsForLevel[8]);
-
-          switch (tt)
-          {
-            case TileType::CORNER_DR:
-            {
-              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_UP);
-            }
-            break;
-
-            case TileType::CORNER_DL:
-            {
-              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_UP,
-                            Colors::White,
-                            1.0,
-                            0,
-                            GlobalConstants::FlipMaskH);
-            }
-            break;
-
-            case TileType::CORNER_UR:
-            {
-              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_DOWN);
-            }
-            break;
-
-            case TileType::CORNER_UL:
-            {
-              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_DOWN,
-                            Colors::White,
-                            1.0,
-                            0,
-                            GlobalConstants::FlipMaskH);
-            }
-            break;
-
-            case TileType::LINE_H:
-            {
-              t.SetGraphics(GraphicTiles::FENCE_WOODEN);
-            }
-            break;
-
-            case TileType::LINE_V:
-            {
-              t.SetGraphics(GraphicTiles::FENCE_WOODEN_V);
-            }
-            break;
-          }
-
           PlaceStaticObject(posX, posY, t);
         }
         break;
@@ -1193,6 +1132,12 @@ void MapLevelTown::PlaceGarden(int x, int y)
 
     posX = x;
     posY++;
+  }
+
+  if (Game::gApp.AppData.UseGraphics)
+  {
+    PlaceWoodenFence({ 33, 22 }, { 37, 26 });
+    PlaceWoodenFence({ 47, 22 }, { 51, 26 });
   }
 }
 
