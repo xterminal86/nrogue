@@ -207,8 +207,10 @@ void MapLevelDeepDark::CreateSpecialLevel()
 
 // =============================================================================
 
-void MapLevelDeepDark::CreateCommonObjects(int x, int y, char image)
+void MapLevelDeepDark::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
+  char image = mapRaw[x][y];
+
   switch (image)
   {
     case '#':

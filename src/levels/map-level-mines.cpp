@@ -488,15 +488,34 @@ void MapLevelMines::CreateSpecialMonsters()
 
 // =============================================================================
 
-void MapLevelMines::CreateCommonObjects(int x, int y, char image)
+void MapLevelMines::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
   GameObjectInfo t;
+
+  char image = mapRaw[x][y];
 
   switch (image)
   {
     case '#':
     {
-      auto r = Util::WeightedRandom(_mineWallsProbability);
+      TileType tt = Util::GetTileType(x, y, '#', mapRaw);
+
+      GraphicTiles gt = Util::Rolld100(50) ?
+                          GraphicTiles::WALL_MINE :
+                          GraphicTiles::WALL_MINE2;
+
+      switch (tt)
+      {
+        case TileType::FULL:
+        {
+          gt = Util::Rolld100(50) ? GraphicTiles::GRAVEL : GraphicTiles::GRAVEL2;
+        }
+        break;
+
+        default:
+          break;
+      }
+
       PlaceWall(x,
                 y,
                 ' ',
@@ -504,7 +523,7 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                 Colors::ShadesOfGrey::Six,
                 Strings::TileNames::MineWall,
                 false,
-                r.first);
+                gt);
     }
     break;
 
@@ -562,7 +581,10 @@ void MapLevelMines::CreateCommonObjects(int x, int y, char image)
                       (image == '1') ?
                       Colors::ShadesOfGrey::Two :
                       Colors::ShadesOfGrey::Fourteen,
-                      Strings::TileNames::TiledFloor);
+                      Strings::TileNames::TiledFloor,
+                      (image == '1') ?
+                      GraphicTiles::TILE_BIG_BLACK :
+                      GraphicTiles::TILE_BIG_WHITE);
       break;
   }
 }

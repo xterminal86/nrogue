@@ -1385,7 +1385,7 @@ void MapLevelBase::ConstructFromBuilder(LevelBuilder& lb)
       // This ensures that all common objects will share the same visual style
       // that is defined for the current map.
       //
-      CreateCommonObjects(x, y, lb.MapRaw[x][y]);
+      CreateCommonObjects(x, y, lb.MapRaw);
 
       if (map[x][y].ZoneMarker != TransformedRoom::UNMARKED)
       {

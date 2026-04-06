@@ -75,10 +75,12 @@ void MapLevelLostCity::CreateLevel()
 
 // =============================================================================
 
-void MapLevelLostCity::CreateCommonObjects(int x, int y, char image)
+void MapLevelLostCity::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
   GameObjectInfo t;
   std::string objName;
+
+  char image = mapRaw[x][y];
 
   switch (image)
   {

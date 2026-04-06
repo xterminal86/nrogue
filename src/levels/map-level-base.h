@@ -198,7 +198,7 @@ class MapLevelBase
     // To process tiles based on their visual representation.
     // Used to instantiate common content: walls, doors, etc.
     //
-    virtual void CreateCommonObjects(int x, int y, char image) = 0;
+    virtual void CreateCommonObjects(int x, int y, const CharV2& mapRaw) = 0;
 
     //
     // To instantiate some additional content on this tile

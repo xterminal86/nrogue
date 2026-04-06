@@ -84,10 +84,12 @@ void MapLevelAbyss::CreateLevel()
 
 // =============================================================================
 
-void MapLevelAbyss::CreateCommonObjects(int x, int y, char image)
+void MapLevelAbyss::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
   GameObjectInfo t;
   std::string objName;
+
+  char image = mapRaw[x][y];
 
   switch (image)
   {

@@ -1640,8 +1640,10 @@ void Run()
   {
     ConsoleLog("%s", ss.str().data());
   }
-
-  ConsoleLog("Test results have been written into 'tests.txt'\n\n");
+  else
+  {
+    ConsoleLog("Test results have been written into 'tests.txt'\n\n");
+  }
 }
 
 // =============================================================================

@@ -19,15 +19,7 @@ class MapLevelMines : public MapLevelBase
     void CreateSpecialLevel() override;
     void CreateSpecialMonsters() override;
 
-    void CreateCommonObjects(int x, int y, char image) override;
-
-    const std::unordered_map<GraphicTiles, int> _mineWallsProbability =
-    {
-        { GraphicTiles::GRAVEL,     50 }
-      , { GraphicTiles::GRAVEL2,    50 }
-      , { GraphicTiles::WALL_MINE,  25 }
-      , { GraphicTiles::WALL_MINE2, 25 }
-    };
+    void CreateCommonObjects(int x, int y, const CharV2& mapRaw) override;
 };
 
 #endif // MAPLEVELMINES_H

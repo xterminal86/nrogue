@@ -173,6 +173,6 @@ void MapLevelTest::CreateLevel()
 
 // =============================================================================
 
-void MapLevelTest::CreateCommonObjects(int x, int y, char image)
+void MapLevelTest::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
 }

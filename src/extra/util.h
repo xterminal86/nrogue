@@ -395,10 +395,99 @@ namespace Util
 
   extern uint16_t BoolFlagsToMask(const std::vector<bool>& traverse);
 
-  extern TileType GetTileType(int arrayX,
-                              int arrayY,
-                              char tileImage,
-                              const StringV& mapLayout);
+  // ===========================================================================
+
+  template <typename MapArray>
+  TileType GetTileType(int ax,
+                       int ay,
+                       char tileImage,
+                       const MapArray& mapLayout)
+  {
+    static const std::unordered_map<unsigned long, TileType> tileTypeByMask =
+    {
+        { (unsigned long)TileType::NOTHING,      TileType::NOTHING      }
+      , { (unsigned long)TileType::LINE_VU,      TileType::LINE_VU      }
+      , { (unsigned long)TileType::LINE_VD,      TileType::LINE_VD      }
+      , { (unsigned long)TileType::LINE_V,       TileType::LINE_V       }
+      , { (unsigned long)TileType::LINE_HL,      TileType::LINE_HL      }
+      , { (unsigned long)TileType::LINE_HR,      TileType::LINE_HR      }
+      , { (unsigned long)TileType::LINE_H,       TileType::LINE_H       }
+      , { (unsigned long)TileType::CORNER_UL,    TileType::CORNER_UL    }
+      , { (unsigned long)TileType::CORNER_UR,    TileType::CORNER_UR    }
+      , { (unsigned long)TileType::CORNER_DR,    TileType::CORNER_DR    }
+      , { (unsigned long)TileType::CORNER_DL,    TileType::CORNER_DL    }
+      , { (unsigned long)TileType::T_JUNCTION_D, TileType::T_JUNCTION_D }
+      , { (unsigned long)TileType::T_JUNCTION_U, TileType::T_JUNCTION_U }
+      , { (unsigned long)TileType::T_JUNCTION_L, TileType::T_JUNCTION_L }
+      , { (unsigned long)TileType::T_JUNCTION_R, TileType::T_JUNCTION_R }
+    };
+
+    std::bitset<9> mask;
+
+    TileType res = TileType::NOTHING;
+
+    Position size =
+    {
+      (int)mapLayout.size(),
+      (int)(mapLayout.empty() ? 0 : mapLayout[0].size())
+    };
+
+    //
+    // .x.
+    // ...
+    // ...
+    //
+    mask.set(7, !IsInsideMap({ ax - 1, ay }, size, false) ?
+                false :
+                (mapLayout[ax - 1][ay] == tileImage));
+    //
+    // ...
+    // x..
+    // ...
+    //
+    mask.set(5, !IsInsideMap({ ax, ay - 1 }, size, false) ?
+                false :
+                (mapLayout[ax][ay - 1] == tileImage));
+    //
+    // ...
+    // .x.
+    // ...
+    //
+    mask.set(4, !IsInsideMap({ ax, ay }, size, false) ?
+                false :
+                (mapLayout[ax][ay] == tileImage));
+    //
+    // ...
+    // ..x
+    // ...
+    //
+    mask.set(3, !IsInsideMap({ ax, ay + 1 }, size, false) ?
+                false :
+                (mapLayout[ax][ay + 1] == tileImage));
+    //
+    // ...
+    // ...
+    // .x.
+    //
+    mask.set(1, !IsInsideMap({ ax + 1, ay }, size, false) ?
+                false :
+                (mapLayout[ax + 1][ay] == tileImage));
+
+    if (mask.test(4) == false)
+    {
+      res = TileType::NOTHING;
+    }
+    else
+    {
+      auto value = mask.to_ulong();
+
+      res = (tileTypeByMask.count(value) == 1) ?
+            tileTypeByMask.at(value) :
+            TileType::FULL;
+    }
+
+    return res;
+  }
 
   // ===========================================================================
 

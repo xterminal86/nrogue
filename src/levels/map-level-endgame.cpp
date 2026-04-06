@@ -60,7 +60,7 @@ void MapLevelEndgame::CreateLevel()
 
 // =============================================================================
 
-void MapLevelEndgame::CreateCommonObjects(int x, int y, char image)
+void MapLevelEndgame::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
 }
 

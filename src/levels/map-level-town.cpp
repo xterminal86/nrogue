@@ -1096,7 +1096,6 @@ void MapLevelTown::PlaceGarden(int x, int y)
         {
           PlaceGrassTile(posX, posY, -1);
 
-          /*
           t.Set(true,
                 false,
                 '#',
@@ -1104,9 +1103,60 @@ void MapLevelTown::PlaceGarden(int x, int y)
                 Colors::Grass,
                 Strings::TileNames::WoodenFence,
                 Strings::Empty);
-          t.SetGraphics(GraphicTiles::FENCE_WOODEN);
+
+          TileType tt = Util::GetTileType(posY - y,
+                                          posX - x,
+                                          '#',
+                                          _layoutsForLevel[8]);
+
+          switch (tt)
+          {
+            case TileType::CORNER_DR:
+            {
+              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_UP);
+            }
+            break;
+
+            case TileType::CORNER_DL:
+            {
+              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_UP,
+                            Colors::White,
+                            1.0,
+                            0,
+                            GlobalConstants::FlipMaskH);
+            }
+            break;
+
+            case TileType::CORNER_UR:
+            {
+              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_DOWN);
+            }
+            break;
+
+            case TileType::CORNER_UL:
+            {
+              t.SetGraphics(GraphicTiles::FENCE_WOODEN_CORNER_DOWN,
+                            Colors::White,
+                            1.0,
+                            0,
+                            GlobalConstants::FlipMaskH);
+            }
+            break;
+
+            case TileType::LINE_H:
+            {
+              t.SetGraphics(GraphicTiles::FENCE_WOODEN);
+            }
+            break;
+
+            case TileType::LINE_V:
+            {
+              t.SetGraphics(GraphicTiles::FENCE_WOODEN_V);
+            }
+            break;
+          }
+
           PlaceStaticObject(posX, posY, t);
-          */
         }
         break;
 
@@ -1312,6 +1362,6 @@ bool MapLevelTown::SkipArea(const Position& pos, const Rect& area)
 
 // =============================================================================
 
-void MapLevelTown::CreateCommonObjects(int x, int y, char image)
+void MapLevelTown::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
 }

@@ -195,8 +195,10 @@ void MapLevelCaves::CreateLevel()
 
 // =============================================================================
 
-void MapLevelCaves::CreateCommonObjects(int x, int y, char image)
+void MapLevelCaves::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
 {
+  char image = mapRaw[x][y];
+
   switch (image)
   {
     case '#':

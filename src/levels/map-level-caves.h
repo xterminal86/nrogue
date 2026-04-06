@@ -17,7 +17,7 @@ class MapLevelCaves : public MapLevelBase
     void CreateLevel() override;
     void CreateSpecialLevel() override;
 
-    void CreateCommonObjects(int x, int y, char image) override;
+    void CreateCommonObjects(int x, int y, const CharV2& mapRaw) override;
 
   private:
     void CreateRivers();

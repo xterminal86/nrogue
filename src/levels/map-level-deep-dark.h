@@ -15,7 +15,7 @@ class MapLevelDeepDark : public MapLevelBase
     void CreateLevel() override;
     void CreateSpecialLevel() override;
 
-    void CreateCommonObjects(int x, int y, char image) override;
+    void CreateCommonObjects(int x, int y, const CharV2& mapRaw) override;
 };
 
 #endif // MAPLEVELDEEPDARK_H
