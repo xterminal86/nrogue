@@ -1623,14 +1623,14 @@ void MapLevelBase::PaintTileBorders(const Position& from,
   auto perimeter = Util::GetPerimeter(lx, ly, hx, hy);
   for (const Position& p : perimeter)
   {
-    bool cornerUL = (p.X == lx && p.Y == ly);
-    bool cornerUR = (p.X == hx && p.Y == ly);
-    bool cornerDR = (p.X == hx && p.Y == hy);
-    bool cornerDL = (p.X == lx && p.Y == hy);
+    bool cornerUL    = (p.X == lx && p.Y == ly);
+    bool cornerUR    = (p.X == hx && p.Y == ly);
+    bool cornerDR    = (p.X == hx && p.Y == hy);
+    bool cornerDL    = (p.X == lx && p.Y == hy);
     bool upperStripH = (p.X > lx && p.X < hx) && (p.Y == ly);
     bool lowerStripH = (p.X > lx && p.X < hx) && (p.Y == hy);
     bool leftStripV  = (p.X == lx) && (p.Y > ly && p.Y < hy);
-    bool rightStripV  = (p.X == hx) && (p.Y > ly && p.Y < hy);
+    bool rightStripV = (p.X == hx) && (p.Y > ly && p.Y < hy);
 
     if (cornerUL)
     {
@@ -1744,4 +1744,23 @@ void MapLevelBase::PlaceWoodenFence(const Position& from, const Position& to)
                     GlobalConstants::FlipMaskH);
     PlaceStaticObject(hx, y, goi);
   }
+}
+
+// =============================================================================
+
+bool MapLevelBase::IsCellFacingFront(int x, int y, int image)
+{
+  if (!Util::IsInsideMap({ x, y }, MapSize))
+  {
+    return false;
+  }
+
+  if (!Util::IsInsideMap({ x, y + 1 }, MapSize))
+  {
+    return false;
+  }
+
+  return StaticMapObjects[x][y + 1] == nullptr 
+      || (StaticMapObjects[x][y + 1] != nullptr 
+       && StaticMapObjects[x][y + 1]->Image != image);
 }

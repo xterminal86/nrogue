@@ -184,6 +184,8 @@ void MapLevelMines::CreateLevel()
 
     ConstructFromBuilder(lb);
 
+    PostProcessWalls(lb);
+
     RecordEmptyCells();
 
     PlaceStairs();
@@ -192,6 +194,34 @@ void MapLevelMines::CreateLevel()
 
     //int itemsToCreate = GetEstimatedNumberOfItemsToCreate();
     //CreateItemsForLevel(itemsToCreate);
+  }
+}
+
+// =============================================================================
+
+void MapLevelMines::PostProcessWalls(LevelBuilder& lb)
+{
+  for (int x = 0; x < MapSize.X; x++)
+  {
+    for (int y = 0; y < MapSize.Y; y++)
+    {
+      auto map = lb.GetMapRaw();
+
+      if ((y + 1) <= (MapSize.Y - 1))
+      {
+        if (StaticMapObjects[x][y] != nullptr && map[x][y] == '#')
+        {
+          if (StaticMapObjects[x][y + 1] == nullptr 
+          || (StaticMapObjects[x][y + 1] != nullptr 
+           && StaticMapObjects[x][y + 1]->Image != StaticMapObjects[x][y]->Image))
+          {
+            StaticMapObjects[x][y]->Graphic.Tile = Util::Rolld100(50) ? 
+                                                   GraphicTiles::WALL_MINE :
+                                                   GraphicTiles::WALL_MINE2;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -538,25 +568,11 @@ void MapLevelMines::CreateCommonObjects(int x, int y, const CharV2& mapRaw)
   switch (image)
   {
     case '#':
-    {
-      TileType tt = Util::GetTileType(x, y, '#', mapRaw);
-
-      GraphicTiles gt = Util::Rolld100(50) ?
-                          GraphicTiles::WALL_MINE :
-                          GraphicTiles::WALL_MINE2;
-
-      switch (tt)
-      {
-        case TileType::FULL:
-        {
-          gt = Util::Rolld100(50) ? GraphicTiles::GRAVEL : GraphicTiles::GRAVEL2;
-        }
-        break;
-
-        default:
-          break;
-      }
-
+    {      
+      GraphicTiles gt = Util::Rolld100(50) ? 
+                        GraphicTiles::GRAVEL : 
+                        GraphicTiles::GRAVEL2;
+          
       PlaceWall(x,
                 y,
                 ' ',

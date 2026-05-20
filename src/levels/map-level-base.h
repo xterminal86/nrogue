@@ -177,7 +177,7 @@ class MapLevelBase
     int GetEstimatedNumberOfItemsToCreate();
 
     void ConstructFromBuilder(LevelBuilder& lb);
-
+        
     void CreateGround(char img,
                       uint32_t fgColor,
                       uint32_t bgColor,
@@ -199,7 +199,7 @@ class MapLevelBase
     // Used to instantiate common content: walls, doors, etc.
     //
     virtual void CreateCommonObjects(int x, int y, const CharV2& mapRaw) = 0;
-
+        
     //
     // To instantiate some additional content on this tile
     // based on metadata in MapCell. Basically used to process zones
@@ -265,6 +265,23 @@ class MapLevelBase
                           GraphicTiles filler = GraphicTiles::NONE);
     void PlaceWoodenFence(const Position& from,
                           const Position& to);
+
+    //
+    // E.g.
+    //  
+    // .#.
+    // ### - left and right middle ones
+    // ... 
+    // 
+    // ...
+    // ### - all three
+    // ...
+    // 
+    // .#.
+    // .#. - middle one
+    // ...
+    //
+    bool IsCellFacingFront(int x, int y, int image);
 
     friend class Map;
 

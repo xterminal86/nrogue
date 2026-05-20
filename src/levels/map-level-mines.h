@@ -20,6 +20,8 @@ class MapLevelMines : public MapLevelBase
     void CreateSpecialMonsters() override;
 
     void CreateCommonObjects(int x, int y, const CharV2& mapRaw) override;
+
+    void PostProcessWalls(LevelBuilder& lb);
 };
 
 #endif // MAPLEVELMINES_H
