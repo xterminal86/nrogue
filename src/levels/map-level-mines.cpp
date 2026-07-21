@@ -420,7 +420,7 @@ void MapLevelMines::CreateSpecialLevel()
 
         case 'b':
         {
-          if (Game::gApp.AppData.UseGraphics)
+          if (Game::gApp.AppData.UseGraphicTiles)
           {
             PlaceGroundTile(posX,
                             posY,

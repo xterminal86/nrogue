@@ -185,6 +185,7 @@ namespace Colors
   extern const uint32_t MessageBoxRedBorder;
   extern const uint32_t MessageBoxBlueBorder;
   extern const uint32_t MessageBoxHeaderBg;
+  extern const uint32_t StatusWarningBg;
   extern const uint32_t ItemMagic;
   extern const uint32_t ItemRare;
   extern const uint32_t ItemUnique;

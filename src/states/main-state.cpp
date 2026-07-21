@@ -223,6 +223,26 @@ void MainState::HandleInput()
 
 // =============================================================================
 
+#ifdef USE_SDL
+void MainState::DrawExpBar()
+{
+  auto th = Game::gPrnt.TerminalHeight;
+
+  auto p = Game::gPrnt.CharPosToWindowPos(1, th - 1);
+
+  int expCur = _playerRef->Attrs.Exp.Min().Get();
+  int expMax = _playerRef->Attrs.Exp.Max().Get();
+
+  int xPos1 = Game::gPrnt.SgTileSize * 2;
+  int xPos2 = GlobalConstants::HPMPBarLength * Game::gPrnt.SgTileSize;
+  xPos2 = xPos1 + (int)(((double)expCur / (double)expMax) * (double)xPos2);
+
+  Game::gPrnt.DrawRect(p.first, p.second - 2, xPos2, p.second, 0xFFFF00);
+}
+#endif
+
+// =============================================================================
+
 void MainState::Update(bool forceUpdate)
 {
   if (_keyPressed != -1 || forceUpdate)
@@ -239,6 +259,10 @@ void MainState::Update(bool forceUpdate)
     DisplayExitHint();
     DisplayStatusIcons();
     DrawHPMP();
+
+#ifdef USE_SDL
+    DrawExpBar();
+#endif
 
     if (Game::gPrnt.ShowLastMessage)
     {
@@ -434,25 +458,6 @@ void MainState::DrawHPMP()
     Colors::White,
     0x000088
   );
-
-  // FIXME: draw exp bar
-
-  /*
-#ifdef USE_SDL
-  int expCur = _playerRef->Attrs.Exp.Min().Get();
-  int expMax = _playerRef->Attrs.Exp.Max().Get();
-
-  auto tws = Game::gPrnt.GetTileWHScaled();
-
-  int xPos1 = tws.first * 2;
-  int xPos2 = GlobalConstants::HPMPBarLength * tws.first;
-  xPos2 = xPos1 + (int)(((double)expCur / (double)expMax) * (double)xPos2);
-  int yPos = (th - 1) * tws.second;
-
-  Game::gPrnt.DrawRect(xPos1, yPos - 1, xPos2, yPos + 1, 0xFFFF00);
-#endif
-  */
-
 }
 
 // =============================================================================
@@ -1002,31 +1007,78 @@ void MainState::DisplayStatusIcons()
 
 void MainState::DisplayHungerStatus(const int& startPos)
 {
-  if (_playerRef->IsStarving)
+  auto DrawHungerStatus =
+  [this](const std::function<void()>& drawerYellow,
+         const std::function<void()>& drawerRed)
   {
-    Game::gPrnt.PrintChar(
-      startPos,
-      _th - 3,
-      '%',
-      Colors::White,
-      Colors::Red
-    );
-  }
-  else
+    if (_playerRef->IsStarving)
+    {
+      drawerRed();
+    }
+    else
+    {
+      int hungerMax = _playerRef->Attrs.HungerRate.Get();
+      int part = hungerMax - hungerMax * 0.25;
+      if (_playerRef->Attrs.Hunger >= part)
+      {
+        drawerYellow();
+      }
+    }
+  };
+
+#ifdef USE_SDL
+  auto DrawImage = [this, startPos](uint32_t color)
   {
-    int hungerMax = _playerRef->Attrs.HungerRate.Get();
-    int part = hungerMax - hungerMax * 0.25;
-    if (_playerRef->Attrs.Hunger >= part)
+    if (Game::gApp.AppData.UseGraphicTiles)
+    {
+      Game::gPrnt.DrawGraphicsTile(
+        // NOTE: tile sprite position is too far to the right.
+        startPos,
+        _th - 3,
+        GraphicTiles::GUI_HUNGER,
+        color
+      );
+    }
+    else
     {
       Game::gPrnt.PrintChar(
         startPos,
         _th - 3,
         '%',
         Colors::White,
-        0x999900
+        color
       );
     }
-  }
+  };
+#else
+  auto DrawImage = [this, startPos](uint32_t color)
+  {
+    Game::gPrnt.PrintChar(
+      startPos,
+      _th - 3,
+      '%',
+      Colors::White,
+      color
+    );
+  };
+#endif
+
+  DrawHungerStatus(
+    [this, DrawImage]()
+    {
+      uint32_t bgColor = Colors::StatusWarningBg;
+
+      #ifdef USE_SDL
+      if (Game::gApp.AppData.UseGraphicTiles)
+      {
+        bgColor = Colors::Yellow;
+      }
+      #endif
+
+      DrawImage(bgColor);
+    },
+    [this, DrawImage]() { DrawImage(Colors::Red);             }
+  );
 }
 
 // =============================================================================

@@ -1315,13 +1315,13 @@ void Map::DrawFowTile(int x, int y)
 
   floorTile = CurrentLevel->MapArray[x][y]->Graphic;
   fowTile   = CurrentLevel->FowLayer[x][y].Graphic;
-  
+
   uint32_t fowColor = Colors::ShadesOfGrey::Six;
 
   floorTile.ColorTint = fowColor;
   fowTile.ColorTint   = fowColor;
 
-  bool useGraphicsTile = (Game::gApp.AppData.UseGraphics
+  bool useGraphicsTile = (Game::gApp.AppData.UseGraphicTiles
                        && fowTile.Tile != GraphicTiles::NONE);
 
   if (useGraphicsTile)

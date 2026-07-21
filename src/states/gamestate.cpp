@@ -288,7 +288,7 @@ void GameState::MoveCursor(Position& cursorPosition, int dx, int dy)
 void GameState::DrawCursor(const Position& cursorPosition)
 {
 #ifdef USE_SDL
-  if (Game::gApp.AppData.UseGraphics)
+  if (Game::gApp.AppData.UseGraphicTiles)
   {
     Game::gPrnt.DrawGraphicsTile(
       cursorPosition.X + Game::gMap.CurrentLevel->MapOffsetX,

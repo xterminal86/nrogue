@@ -39,6 +39,10 @@ class MainState : public GameState
     void DrawHPMP();
     void GetActorsAround();
 
+#ifdef USE_SDL
+    void DrawExpBar();
+#endif
+
     #ifdef DEBUG_BUILD
     void PrintDebugInfo();
     #endif

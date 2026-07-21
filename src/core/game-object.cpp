@@ -285,7 +285,8 @@ void GameObject::Draw(const uint32_t& overrideColorFg,
   // If no custom tileset loaded or GameObject has no graphic tile set.
   //
   bool useGraphicsTile =
-      (Game::gApp.AppData.UseGraphics && Graphic.Tile != GraphicTiles::NONE);
+      (Game::gApp.AppData.UseGraphicTiles
+    && Graphic.Tile != GraphicTiles::NONE);
 
   if (useGraphicsTile)
   {

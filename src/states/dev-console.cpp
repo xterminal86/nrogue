@@ -517,6 +517,19 @@ void DevConsole::Update(bool forceUpdate)
       Colors::White
     );
 
+    bool noLine =
+        (_stdout->GetScrollState() == MessageBufferScrollState::NONE
+      || _stdout->GetScrollState() == MessageBufferScrollState::BOTTOM);
+
+    if (!noLine)
+    {
+      PairI p = Game::gPrnt.CharPosToWindowPos(Game::gPrnt.TerminalWidth - 1,
+                                               Game::gPrnt.TerminalHeight - 1);
+      Game::gPrnt.DrawRect(0, p.second - 2,
+                           p.first, p.second,
+                           Colors::White);
+    }
+
     Game::gPrnt.Render();
   }
 }

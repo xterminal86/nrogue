@@ -1134,7 +1134,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
     posY++;
   }
 
-  if (Game::gApp.AppData.UseGraphics)
+  if (Game::gApp.AppData.UseGraphicTiles)
   {
     PlaceWoodenFence({ 33, 22 }, { 37, 26 });
     PlaceWoodenFence({ 47, 22 }, { 51, 26 });

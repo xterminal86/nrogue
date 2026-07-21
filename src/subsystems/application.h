@@ -80,7 +80,7 @@ class Application
       //
       // Sets to true if custom tileset was loaded.
       //
-      bool UseGraphics = false;
+      bool UseGraphicTiles = false;
 
       //
       // Dimensions of the application window to be created.

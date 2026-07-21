@@ -345,7 +345,7 @@ void Application::DrawAttackCursor(int x, int y,
     {
 #ifdef USE_SDL
       bool useGraphicsTile =
-        (Game::gApp.AppData.UseGraphics
+        (Game::gApp.AppData.UseGraphicTiles
       && defender->Graphic.Tile != GraphicTiles::NONE);
       if (useGraphicsTile)
       {
@@ -966,7 +966,7 @@ void Application::LoadConfig()
             _loadedConfig[kConfigKeyTileset].GetString();
       }
 
-      AppData.UseGraphics = !GameConfig.TilesetFilename.empty();
+      AppData.UseGraphicTiles = !GameConfig.TilesetFilename.empty();
 
       if (!ParseValue<int>(kConfigKeyTileSize, GameConfig.TileSize))
       {

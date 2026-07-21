@@ -454,6 +454,14 @@ void LookInputState::DrawHint()
 
   for (auto& p : _cellsToHighlight)
   {
+#ifdef USE_SDL
+    Game::gPrnt.DrawSubstituteGraphicsTile(
+      p.X + mox,
+      p.Y + moy,
+      '.',
+      Colors::Yellow
+    );
+#else
     Game::gPrnt.PrintChar(
       p.X + mox,
       p.Y + moy,
@@ -461,6 +469,7 @@ void LookInputState::DrawHint()
       Colors::Yellow,
       Colors::Black
     );
+#endif
   }
 }
 #endif

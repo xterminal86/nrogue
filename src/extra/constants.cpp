@@ -245,6 +245,7 @@ namespace Colors
   const uint32_t MessageBoxRedBorder  = 0x880000; // "#880000";
   const uint32_t MessageBoxBlueBorder = 0x8888FF; // "#8888FF";
   const uint32_t MessageBoxHeaderBg   = 0x4444AA; // "#4444AA";
+  const uint32_t StatusWarningBg      = 0x909000; // "#909000";
   const uint32_t ItemMagic            = 0x4169E1; // "#4169E1";
   const uint32_t ItemRare             = 0xEEEE52; // "#EEEE52";
   const uint32_t ItemUnique           = 0xA59263; // "#A59263";

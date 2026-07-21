@@ -92,6 +92,7 @@ class Printer
                    int align,
                    const uint32_t& htmlColorFg,
                    const uint32_t& htmlColorBg);
+
 #ifndef USE_SDL
 // -----------------------------------------------------------------------------
     /// Print text at (x, y) directly to the screen,
@@ -200,6 +201,8 @@ class Printer
     void DrawRect(int x1, int y1,
                   int x2, int y2,
                   uint32_t color);
+
+    PairI CharPosToWindowPos(const int cx, const int cy);
 
     const std::unordered_map<uint32_t, TileColor>& GetValidColorsCache();
 

@@ -132,7 +132,7 @@ bool Printer::LoadGraphicsTileset()
 
 bool Printer::LoadSubstituteGraphicTileset()
 {
-  auto appData = Game::gApp.AppData;
+  Application::ApplicationData& appData = Game::gApp.AppData;
 
   auto res = Util::Base64_Decode(Base64Strings::GraphicsTileset16x16Base64);
   auto bytes = Util::ConvertStringToBytes(res);
@@ -163,7 +163,7 @@ bool Printer::LoadSubstituteGraphicTileset()
   // If custom tileset was loaded, calculate scale factor for substitute tiles
   // drawing.
   //
-  if (appData.UseGraphics)
+  if (appData.UseGraphicTiles)
   {
     _sgScaleFactor = _graphicTileSize / (double)SgTileSize;
     appData.SgTileSizeScaled = _sgScaleFactor;
@@ -232,7 +232,7 @@ SDL_Rect Printer::GetWindowSize(int tileSize)
 
   int ww = 0, wh = 0;
 
-  if (Game::gApp.AppData.UseGraphics)
+  if (Game::gApp.AppData.UseGraphicTiles)
   {
     ww = Game::gApp.GameConfig.TileSize * GraphicsWindowWidth;
     wh = Game::gApp.GameConfig.TileSize * GraphicsWindowHeight;
@@ -340,7 +340,7 @@ bool Printer::InitForSDL()
     return false;
   }
 
-  if (Game::gApp.AppData.UseGraphics)
+  if (Game::gApp.AppData.UseGraphicTiles)
   {
     if (!LoadGraphicsTileset())
     {
@@ -921,6 +921,13 @@ const std::unordered_map<uint32_t, TileColor>& Printer::GetValidColorsCache()
 void Printer::SetRenderDst(const SDL_Rect& dst)
 {
   _renderDst = dst;
+}
+
+// =============================================================================
+
+PairI Printer::CharPosToWindowPos(const int cx, const int cy)
+{
+  return { cx * _textTileWidthScaled, cy * _textTileHeightScaled };
 }
 #endif
 
