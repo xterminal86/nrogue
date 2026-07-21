@@ -59,11 +59,14 @@ int GameState::GetKeyDown()
 
         if (sc == SDL_SCANCODE_F12)
         {
-          GameStates s = GameStates::MESSAGE_BOX_STATE;
-          if (Game::gApp.CurrentStateIs(s))
-          {
-            Game::gApp.CloseMessageBox();
-          }
+          //
+          // Some screens can't be screenshotted if we do this.
+          //
+          //GameStates s = GameStates::MESSAGE_BOX_STATE;
+          //if (Game::gApp.CurrentStateIs(s))
+          //{
+          //  Game::gApp.CloseMessageBox();
+          //}
 
           TakeScreenshot();
         }
@@ -213,10 +216,17 @@ void GameState::TakeScreenshot()
   SDL_SaveBMP(sshot, fname.data());
   SDL_FreeSurface(sshot);
 
-  Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
-                            "Screenshot Taken",
-                            { fname },
-                            Colors::MessageBoxBlueBorder);
+  //
+  // Showing graphics during screenshot taking can cause problems (e.g. you'll
+  // screenshot the message box with notification about screenshot on top of
+  // what you wanted to).
+  // So let's just leave log output.
+  //
+  //Game::gApp.ShowMessageBox(MessageBoxType::WAIT_FOR_INPUT,
+  //                          "Screenshot Taken",
+  //                          { fname },
+  //                          Colors::MessageBoxBlueBorder);
+
   DebugLog("Wrote %s", fname.data());
 }
 #endif

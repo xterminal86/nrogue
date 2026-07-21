@@ -866,14 +866,22 @@ void MapLevelTown::CreateChurch(int x, int y)
 
         case 'h':
         {
-          t.Set(false,
-                false,
-                c,
-                Colors::Wood,
-                Colors::Black,
-                Strings::TileNames::WoodenBench,
-                "?" + Strings::TileNames::WoodenBench + "?");
-          PlaceStaticObject(posX, posY, t);
+          PlaceGroundTile(posX,
+                          posY,
+                          '-',
+                          Colors::WoodPlankSeam,
+                          Colors::RoomFloor,
+                          Strings::TileNames::WoodenFloor,
+                          GraphicTiles::TILES_DIAMOND_WHITE_BROWN);
+
+          //t.Set(false,
+          //      false,
+          //      c,
+          //      Colors::Wood,
+          //      Colors::Black,
+          //      Strings::TileNames::WoodenBench,
+          //      "?" + Strings::TileNames::WoodenBench + "?");
+          //PlaceStaticObject(posX, posY, t);
         }
         break;
 
