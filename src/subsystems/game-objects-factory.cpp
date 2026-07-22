@@ -334,6 +334,7 @@ GameObject* GameObjectsFactory::CloneObject(GameObject* copyFrom)
   copy->Occupied         = copyFrom->Occupied;
   copy->IsDestroyed      = copyFrom->IsDestroyed;
   copy->Image            = copyFrom->Image;
+  copy->Graphic          = copyFrom->Graphic;
   copy->FgColor          = copyFrom->FgColor;
   copy->BgColor          = copyFrom->BgColor;
   copy->ObjectName       = copyFrom->ObjectName;

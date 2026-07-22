@@ -1991,6 +1991,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   {
     go->Image = '=';
     go->ObjectName = "Ring";
+    go->Graphic.Tile = GraphicTiles::RING_BIG;
   }
   else if (category == EquipmentCategory::NECK)
   {
@@ -2002,6 +2003,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
   go->PosY = y;
 
   go->FgColor = Colors::White;
+  go->BgColor = Colors::None;
 
   ItemComponent* ic = go->AddComponent<ItemComponent>();
 
@@ -2037,7 +2039,7 @@ GameObject* ItemsFactory::CreateRandomAccessory(int x, int y,
 // =============================================================================
 
 //
-// Utility method, used for debug creation of items.
+// NOTE: utility method, used for debug creation of items.
 //
 GameObject*
 ItemsFactory::CreateAccessory(int x, int y,
@@ -2052,6 +2054,7 @@ ItemsFactory::CreateAccessory(int x, int y,
   {
     go->Image = '=';
     go->ObjectName = "Ring";
+    go->Graphic.Tile = GraphicTiles::RING_BIG;
   }
   else if (category == EquipmentCategory::NECK)
   {
