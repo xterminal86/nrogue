@@ -517,6 +517,7 @@ void DevConsole::Update(bool forceUpdate)
       Colors::White
     );
 
+#ifdef USE_SDL
     bool noLine =
         (_stdout->GetScrollState() == MessageBufferScrollState::NONE
       || _stdout->GetScrollState() == MessageBufferScrollState::BOTTOM);
@@ -529,6 +530,7 @@ void DevConsole::Update(bool forceUpdate)
                            p.first, p.second,
                            Colors::White);
     }
+#endif
 
     Game::gPrnt.Render();
   }
