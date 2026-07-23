@@ -185,6 +185,10 @@ void MapLevelTest::CreateLevel()
   PaintBlood(4, 2, GraphicTiles::BLOOD_SPLAT2);
   PaintBlood(5, 2, GraphicTiles::BLOOD_SPLAT3);
 
+  GameObject* go = Game::gGOF.CreateShrine(15, 10, ShrineType::MIGHT, 1000);
+  go->Graphic.Tile = GraphicTiles::ALTAR_RED;
+  PlaceStaticObject(go);
+
   CreateStuff();
 }
 
