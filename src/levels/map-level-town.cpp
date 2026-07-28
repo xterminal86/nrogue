@@ -1100,10 +1100,17 @@ void MapLevelTown::PlaceGarden(int x, int y)
 
       switch (c)
       {
-        case '#':
+        case 's':
         {
-          PlaceGrassTile(posX, posY, -1);
-          PlaceStaticObject(posX, posY, t);
+          t.Set(false,
+                false,
+                ' ',
+                Colors::Black,
+                Colors::ShadesOfGrey::Ten,
+                Strings::TileNames::StoneTiles,
+                Strings::Empty);
+          t.SetGraphics(GraphicTiles::STONE_TILES);
+          MapArray[posX][posY]->MakeTile(t);
         }
         break;
 
@@ -1131,7 +1138,7 @@ void MapLevelTown::PlaceGarden(int x, int y)
                           Colors::CaveWall,
                           Colors::CaveWall,
                           Strings::TileNames::StoneFloor,
-                          GraphicTiles::WATER_SHALLOW_HC);
+                          GraphicTiles::STONE_TILES);
           t.Set(true,
                 false,
                 'T',
@@ -1150,12 +1157,6 @@ void MapLevelTown::PlaceGarden(int x, int y)
 
     posX = x;
     posY++;
-  }
-
-  if (Game::gApp.AppData.UseGraphicTiles)
-  {
-    PlaceWoodenFence({ 33, 22 }, { 37, 26 });
-    PlaceWoodenFence({ 47, 22 }, { 51, 26 });
   }
 }
 
