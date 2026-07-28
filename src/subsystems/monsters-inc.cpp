@@ -212,6 +212,8 @@ GameObject* MonstersInc::CreateRat(int x, int y, bool randomize)
 
   go->IsLiving = true;
 
+  go->Graphic.Tile = GraphicTiles::MONSTER_RAT;
+
   //
   // Set attributes.
   //

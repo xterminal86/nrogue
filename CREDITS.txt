@@ -3,7 +3,13 @@
 
 ================================================================================
 
-2. Some graphic tiles pilfered from Nethack Modern tileset (https://sourceforge.net/projects/nethackmodern/).
+--------------------------------------------------------------------------------
+Since I can't draw for shit, I pilfered some graphic tiles from various tilesets
+for Nethack:
+--------------------------------------------------------------------------------
+
+2. Nethack Modern tileset (https://sourceforge.net/projects/nethackmodern/).
+
 Quote from its README follows:
 ```
 This tileset is made by Tower Hufham.
@@ -21,3 +27,7 @@ Thanks to Ray Chason and /u/GGGenom for helping me (finally) convert to 3.6.0.
 3. Terminal CP437-style font by VileR:
 
 https://int10h.org/blog/2015/12/bigblue-terminal-oldschool-fixed-width-font/
+
+================================================================================
+
+4. https://nethackwiki.com/wiki/Forum:Nethack_3.6.0_tileset_nevanda_32x32

@@ -1188,7 +1188,7 @@ bool Map::IsObjectVisible(const Position &from,
   //auto line = Util::BresenhamLine(from, to);
   //
   // If we need to check if certain wall or static object is visible
-  // it will fail on itself on the last point of the line,
+  // it will fail on itself at the last point of the line,
   // so to prevent it we can use tis flag.
   //
   //if (excludeEnd && !line.empty())
@@ -1273,37 +1273,6 @@ void Map::DrawMapTilesAroundPlayer()
       }
     }
   }
-
-  /*
-  // FIXME: O(2N) complexity, replace with direct traversal along MapArray.
-  auto mapCells = Util::GetRectAroundPoint(_playerRef->PosX,
-                                           _playerRef->PosY,
-                                           tw / 2,
-                                           th / 2,
-                                           CurrentLevel->MapSize);
-  for (auto& cell : mapCells)
-  {
-    int x = cell.X;
-    int y = cell.Y;
-
-    if (CurrentLevel->MapArray[x][y]->Visible)
-    {
-      CurrentLevel->MapArray[x][y]->Draw();
-
-      //
-      // Draw static object on top if present.
-      //
-      if (CurrentLevel->StaticMapObjects[x][y] != nullptr)
-      {
-        CurrentLevel->StaticMapObjects[x][y]->Draw();
-      }
-    }
-    else
-    {
-      DrawFowTile(x, y);
-    }
-  }
-  */
 }
 
 // =============================================================================

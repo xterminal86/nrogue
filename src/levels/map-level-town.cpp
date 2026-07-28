@@ -1124,6 +1124,14 @@ void MapLevelTown::PlaceGarden(int x, int y)
           break;
 
         case 'F':
+        {
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::CaveWall,
+                          Colors::CaveWall,
+                          Strings::TileNames::StoneFloor,
+                          GraphicTiles::WATER_SHALLOW_HC);
           t.Set(true,
                 false,
                 'T',
@@ -1131,8 +1139,10 @@ void MapLevelTown::PlaceGarden(int x, int y)
                 Colors::DeepWater,
                 Strings::TileNames::Fountain,
                 Strings::Empty);
+          t.SetGraphics(GraphicTiles::FOUNTAIN);
           PlaceStaticObject(posX, posY, t);
-          break;
+        }
+        break;
       }
 
       posX++;
