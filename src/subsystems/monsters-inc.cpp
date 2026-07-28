@@ -263,6 +263,7 @@ GameObject* MonstersInc::CreateBat(int x, int y, bool randomize)
   go->ObjectName           = "Flying Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns     = 20;
+  go->Graphic.Tile         = GraphicTiles::MONSTER_BAT;
 
   go->IsLiving = true;
 
@@ -318,6 +319,7 @@ GameObject* MonstersInc::CreateVampireBat(int x, int y, bool randomize)
   go->ObjectName           = "Red Bat";
   go->Attrs.Indestructible = false;
   go->HealthRegenTurns     = 20;
+  go->Graphic.Tile         = GraphicTiles::MONSTER_RED_BAT;
 
   go->IsLiving = false;
 

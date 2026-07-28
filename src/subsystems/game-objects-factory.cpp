@@ -80,8 +80,13 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   //
   if (from->IsLiving)
   {
+    go->Graphic.Tile = GraphicTiles::REMAINS;
     //int timeout = from->Attrs.HP.Max().Get() * 10;
     go->AddComponent<TimedDestroyerComponent>(200);
+  }
+  else
+  {
+    go->Graphic.Tile = GraphicTiles::RUBBLE;
   }
 
   std::string objName = from->ObjectName;
