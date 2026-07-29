@@ -17,6 +17,7 @@ core.*
 !tests/README.txt
 !utils/maps/*.txt
 !/CREDITS.txt
+!resources/README.txt
 *.out
 *.exe
 /*.bmp
