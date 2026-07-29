@@ -86,7 +86,9 @@ GameObject* GameObjectsFactory::CreateRemains(GameObject* from)
   }
   else
   {
-    go->Graphic.Tile = GraphicTiles::RUBBLE;
+    // FIXME: proper rubble type for object.
+    go->Graphic.Tile = GraphicTiles::RUBBLE_WOODEN;
+    //go->Graphic.Tile = GraphicTiles::RUBBLE_STONE;
   }
 
   std::string objName = from->ObjectName;
