@@ -294,6 +294,7 @@ namespace Strings
     extern const std::string AbyssalFloor;
     extern const std::string WoodenFence;
     extern const std::string MarbleColumn;
+    extern const std::string MarbleTiles;
     extern const std::string DeepWater;
     extern const std::string ShallowWater;
     extern const std::string Lava;

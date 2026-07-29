@@ -105,6 +105,7 @@ namespace Strings
     const std::string AbyssalFloor = "Abyssal Floor";
     const std::string WoodenFence  = "Wooden Fence";
     const std::string MarbleColumn = "Marble Column";
+    const std::string MarbleTiles  = "Marble Tiles";
     const std::string DeepWater    = "Deep Water";
     const std::string ShallowWater = "Shallow Water";
     const std::string Lava         = "Lava";

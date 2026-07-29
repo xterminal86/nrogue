@@ -423,28 +423,41 @@ void Player::SetAttributes()
   {
     case PlayerClass::SOLDIER:
     {
-      Graphic.Tile = GraphicTiles::CHAR_MERCHANT;
+      Graphic.Tile = GraphicTiles::CHAR_SOLDIER;
       SetSoldierAttrs();
     }
     break;
 
     case PlayerClass::THIEF:
     {
-      Graphic.Tile = GraphicTiles::CHAR_ROGUE;
+      Graphic.Tile = GraphicTiles::CHAR_THIEF;
       SetThiefAttrs();
     }
     break;
 
     case PlayerClass::ARCANIST:
     {
-      Graphic.Tile = GraphicTiles::CHAR_ANGEL;
+      Graphic.Tile = GraphicTiles::CHAR_ARCANIST;
       SetArcanistAttrs();
     }
     break;
 
     case PlayerClass::CUSTOM:
+    {
+      const std::vector<GraphicTiles> sprites =
+      {
+        GraphicTiles::CHAR_SOLDIER,
+        GraphicTiles::CHAR_THIEF,
+        GraphicTiles::CHAR_ARCANIST
+      };
+
+      size_t rndIndex = Game::gRng.RandomRange(0, sprites.size());
+
+      Graphic.Tile = sprites[rndIndex];
+
       SetCustomClassAttrs();
-      break;
+    }
+    break;
   }
 }
 

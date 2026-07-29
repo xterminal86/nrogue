@@ -4,11 +4,11 @@
 #......#......#
 ##+########+###
 #   #ggggggggg#
-#   #g#mm#mm#g#
-+    gm~~~~~mg#
-#   #gm~~F~~mg#
-+    gm~~~~~mg#
-#   #g#mm#mm#g#
+#   #gcttcttcg#
++    gt~~~~~tg#
+#   #gc~~F~~cg#
++    gt~~~~~tg#
+#   #gcttcttcg#
 #   #ggggggggg#
 ##+########+###
 #......#......#

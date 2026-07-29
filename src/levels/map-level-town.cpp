@@ -83,11 +83,11 @@ MapLevelTown::MapLevelTown(int sizeX,
       "#......#......#",
       "##+########+###",
       "#   #ggggggggg#",
-      "#   #g#mm#mm#g#",
-      "+    gm~~~~~mg#",
-      "#   #gm~~F~~mg#",
-      "+    gm~~~~~mg#",
-      "#   #g#mm#mm#g#",
+      "#   #gcttcttcg#",
+      "+    gt~~~~~tg#",
+      "#   #gc~~F~~cg#",
+      "+    gt~~~~~tg#",
+      "#   #gcttcttcg#",
       "#   #ggggggggg#",
       "##+########+###",
       "#......#......#",
@@ -151,11 +151,11 @@ MapLevelTown::MapLevelTown(int sizeX,
     {
       "T.T.T.T.T.T.T.T.T.T",
       "........~~~........",
-      "#####..~WWW~..#####",
-      "#~~~#.~WWWWW~.#~~~#",
-      "#~F~#.~WWWWW~.#~F~#",
-      "#~~~#.~WWWWW~.#~~~#",
-      "#####..~WWW~..#####",
+      ".......~WWW~.......",
+      ".sss..~WWWWW~..sss.",
+      ".sFs..~WWWWW~..sFs.",
+      ".sss..~WWWWW~..sss.",
+      ".......~WWW~.......",
       "........~~~........",
       "T.T.T.T.T.T.T.T.T.T",
     },
@@ -628,6 +628,8 @@ void MapLevelTown::CreateRoom(int x,
           break;
 
         case 'F':
+        {
+          PlaceShallowWaterTile(posX, posY);
           t.Set(true,
                 false,
                 'T',
@@ -635,8 +637,10 @@ void MapLevelTown::CreateRoom(int x,
                 Colors::DeepWater,
                 Strings::TileNames::Fountain,
                 Strings::Empty);
+          t.SetGraphics(GraphicTiles::FOUNTAIN);
           PlaceStaticObject(posX, posY, t);
-          break;
+        }
+        break;
 
         case 'T':
           PlaceTree(posX, posY);
@@ -693,15 +697,33 @@ void MapLevelTown::CreateRoom(int x,
                           GraphicTiles::STONE_TILES);
           break;
 
-        case 'm':
-          t.Set(true,
-                false,
-                '#',
-                Colors::Marble,
-                Colors::Grass,
-                Strings::TileNames::WoodenFence,
-                Strings::Empty);
-          PlaceStaticObject(posX, posY, t);
+        case 't':
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::Black,
+                          Colors::White,
+                          Strings::TileNames::MarbleTiles,
+                          GraphicTiles::TILE_BIG_WHITE);
+          break;
+
+        case 'c':
+          PlaceGroundTile(posX,
+                          posY,
+                          ' ',
+                          Colors::Black,
+                          Colors::White,
+                          Strings::TileNames::MarbleTiles,
+                          GraphicTiles::TILE_BIG_WHITE);
+
+          PlaceWall(posX,
+                    posY,
+                    '#',
+                    Colors::White,
+                    Colors::Black,
+                    Strings::TileNames::MarbleColumn,
+                    false,
+                    GraphicTiles::COLUMN_MARBLE);
           break;
 
         case '~':
@@ -901,7 +923,7 @@ void MapLevelTown::CreateChurch(int x, int y)
   // Some post-processing for graphics.
   //
 #ifdef USE_SDL
-
+  // TODO: add fancy tiles
 #endif
 }
 

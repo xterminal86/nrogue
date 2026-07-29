@@ -1090,9 +1090,9 @@ void MapLevelBase::PlaceGrassTile(int x, int y, int maxDiceRoll)
 
     switch (colorChoice)
     {
-      case 0:  flowerTile = GraphicTiles::CHAMOMILE_GRASS; break;
-      case 1:  flowerTile = GraphicTiles::DANDELION_GRASS; break;
-      case 2:  flowerTile = GraphicTiles::POPPY_GRASS;     break;
+      case 0: flowerTile = GraphicTiles::CHAMOMILE_GRASS; break;
+      case 1: flowerTile = GraphicTiles::DANDELION_GRASS; break;
+      case 2: flowerTile = GraphicTiles::POPPY_GRASS;     break;
       default:
         break;
     }
@@ -1760,7 +1760,7 @@ bool MapLevelBase::IsCellFacingFront(int x, int y, int image)
     return false;
   }
 
-  return StaticMapObjects[x][y + 1] == nullptr 
-      || (StaticMapObjects[x][y + 1] != nullptr 
+  return StaticMapObjects[x][y + 1] == nullptr
+      || (StaticMapObjects[x][y + 1] != nullptr
        && StaticMapObjects[x][y + 1]->Image != image);
 }
