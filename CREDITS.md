@@ -1,0 +1,17 @@
+* `Minecraft skins`: http://www.minecraftskins.com/ - unfortunately I didn't write down actual authors :-(
+
+Since I can't draw for shit, I pilfered some graphic tiles from various tilesets for Nethack:
+
+* `Nethack Modern tileset` (https://sourceforge.net/projects/nethackmodern/). Quote from its README follows:
+> This tileset is made by Tower Hufham.
+> Tweet me at:  @Tower_Hufham
+> Play my games at:  gamejolt.com/profile/tower-hufham/13071/
+>
+> The vector images used in this tileset are courtesy of all the people who submit icons to game-icons.net!
+> game-icons.net is an amazing website with (as of May 2015) nearly two thousand FREE vector icons to use in creative projects!
+>
+> Thanks to Ray Chason and /u/GGGenom for helping me (finally) convert to 3.6.0.
+
+* `Nethack 32x32 tileset`: https://nethackwiki.com/wiki/Forum:Nethack_3.6.0_tileset_nevanda_32x32
+* `Terminal CP437-style font` by VileR:
+https://int10h.org/blog/2015/12/bigblue-terminal-oldschool-fixed-width-font/

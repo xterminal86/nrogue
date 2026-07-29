@@ -16,7 +16,7 @@ core.*
 !CMakeLists.txt
 !tests/README.txt
 !utils/maps/*.txt
-!/CREDITS.txt
+!/CREDITS.md
 !resources/README.txt
 *.out
 *.exe
