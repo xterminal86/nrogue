@@ -923,7 +923,51 @@ void MapLevelTown::CreateChurch(int x, int y)
   // Some post-processing for graphics.
   //
 #ifdef USE_SDL
-  // TODO: add fancy tiles
+  //
+  // Library.
+  //
+  GameObjectInfo goi;
+  goi.ObjectName = "Bookshelf";
+  goi.Graphic.Tile = GraphicTiles::BOOKSHELF;
+  goi.IsBlocking  = true;
+  goi.BlocksSight = true;
+
+  const std::vector<int> xPos = { 80, 81, 82, 84, 85, 86 };
+
+  for (int x : xPos)
+  {
+    PlaceStaticObject(x, 17, goi);
+    PlaceStaticObject(x, 19, goi);
+  }
+
+  //
+  // Altar room.
+  //
+  PaintTileBorders({ 88, 22 },
+                   { 94, 26 },
+                   GraphicTiles::TILE_DIAMOND_BROWN_CORNER,
+                   GraphicTiles::TILE_DIAMOND_BROWN_H,
+                   GraphicTiles::TILES_GREEN_WHITE_DIAG);
+
+  //
+  // Baptismal font.
+  //
+  PaintTileBorders({ 80, 28 },
+                   { 86, 32 },
+                   GraphicTiles::TILE_DIAMOND_BROWN_CORNER,
+                   GraphicTiles::TILE_DIAMOND_BROWN_H,
+                   GraphicTiles::TILE_BIG_WHITE);
+
+  GameObjectInfo font;
+  font.Image = 'F';
+  font.BlocksSight  = false;
+  font.IsBlocking   = true;
+  font.Graphic.Tile = GraphicTiles::FOUNTAIN;
+  font.ObjectName = "Baptismal Font";
+
+  PlaceStaticObject(83, 30, font);
+
+  // TODO: add fancy tiles for main hall
 #endif
 }
 

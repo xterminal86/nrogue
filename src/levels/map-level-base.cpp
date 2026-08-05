@@ -1284,6 +1284,8 @@ void MapLevelBase::PlaceTree(int x, int y)
         Strings::TileNames::Tree,
         Strings::Empty);
 
+  t.Graphic.Tile = GraphicTiles::BUSH;
+
   PlaceStaticObject(x, y, t);
 }
 

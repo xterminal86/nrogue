@@ -15,3 +15,5 @@ Since I can't draw for shit, I pilfered some graphic tiles from various tilesets
 * `Nethack 32x32 tileset`: https://nethackwiki.com/wiki/Forum:Nethack_3.6.0_tileset_nevanda_32x32
 * `Terminal CP437-style font` by VileR:
 https://int10h.org/blog/2015/12/bigblue-terminal-oldschool-fixed-width-font/
+
+* `x-ai/grok-imagine-image-quality`
