@@ -400,6 +400,8 @@ void Shadowcaster::ShadowLine::Add(const Shadow& shadow)
 
 bool Shadowcaster::ShadowLine::IsInFullShadow()
 {
-  return (!_shadows.empty() && _shadows[0].Start == 0 && _shadows[0].End == 1);
+  return (!_shadows.empty()
+        && Util::CloseEnoughTo(_shadows[0].Start, 0.0)
+        && Util::CloseEnoughTo(_shadows[0].End,   1.0));
 }
 

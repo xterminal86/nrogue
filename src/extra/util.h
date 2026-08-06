@@ -395,6 +395,8 @@ namespace Util
 
   extern uint16_t BoolFlagsToMask(const std::vector<bool>& traverse);
 
+  extern bool CloseEnoughTo(double value, double what);
+
   // ===========================================================================
 
   template <typename MapArray>

@@ -134,6 +134,13 @@ namespace Util
 
   // ===========================================================================
 
+  bool CloseEnoughTo(double value, double what)
+  {
+    return std::abs(value - what) < std::numeric_limits<double>::epsilon();
+  }
+
+  // ===========================================================================
+
   bool IsObjectInRange(GameObject* checker,
                        GameObject* checked,
                        int range)

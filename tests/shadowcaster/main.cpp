@@ -7,30 +7,33 @@ void ConsoleTest()
 {
   StringV map =
   {
-    "##########",
-    "#........#",
-    "#.##.....#",
-    "#....#...#",
-    "#.x..#...#",
-    "#....#...#",
-    "#.#......#",
-    "#........#",
-    "#........#",
-    "##########",
+      "###########"
+    , "#.........#"
+    , "#.........#"
+    , "#.........#"
+    , "#.........#"
+    , "#.#.#.#.#.#"
+    , "#.........#"
+    , "#....x....#"
+    , "#.........#"
+    , "#.........#"
+    , "###########"
   };
 
-  //StringV map =
-  //{
-  //  "#########",
-  //  "#.......#",
-  //  "#.......#",
-  //  "#.......#",
-  //  "#...x...#",
-  //  "#.......#",
-  //  "#.......#",
-  //  "#.......#",
-  //  "#########",
-  //};
+  const StringV expected =
+  {
+      "   #####   "
+    , "#   ...   #"
+    , "#.  ...  .#"
+    , "#.. ... ..#"
+    , "  .  .  .  "
+    , "#.#.#.#.#.#"
+    , "#.........#"
+    , "#....x....#"
+    , "#.........#"
+    , "#.........#"
+    , "###########"
+  };
 
   const std::string decor(80, '=');
 
@@ -74,7 +77,7 @@ exitFor:
       case 5:  return { -row,  col };
       case 6:  return { -row, -col };
       case 7:  return { -col, -row };
-      default: return { 0, 0 };
+      default: return {    0,    0 };
     }
   };
 
@@ -198,8 +201,8 @@ exitFor:
       bool IsInFullShadow()
       {
         return (!_shadows.empty() &&
-                _shadows[0].Start == 0 &&
-                _shadows[0].End == 1);
+                Util::CloseEnoughTo(_shadows[0].Start, 0.0) &&
+                Util::CloseEnoughTo(_shadows[0].End,   1.0));
       }
   };
 
@@ -291,9 +294,40 @@ exitFor:
 
   map[playerPosX][playerPosY] = 'x';
 
+  StringV res;
+
+  size_t index = 0;
   for (auto& line : map)
   {
-    printf("%s\n", line.data());
+    printf("%4u: %s\n", index, line.data());
+    res.push_back(line);
+    index++;
+  }
+
+  if (map.size() != expected.size())
+  {
+    printf("actual (%lu) and expected (%lu) map sizes don't match!\n",
+           map.size(), expected.size());
+  }
+  else
+  {
+    bool ok = true;
+    for (size_t i = 0; i < map.size(); i++)
+    {
+      if (map[i] != expected[i])
+      {
+        printf("! line mismatch at index %lu !\n", i);
+        printf("actual   = '%s'\n", map[i].data());
+        printf("expected = '%s'\n", expected[i].data());
+        ok = false;
+        break;
+      }
+    }
+
+    if (ok)
+    {
+      printf("Looks fine.\n");
+    }
   }
 }
 
