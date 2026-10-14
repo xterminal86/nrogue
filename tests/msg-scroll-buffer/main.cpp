@@ -5,12 +5,16 @@
 
 int main(int argc, char* argv[])
 {
-  MsgScrollBuffer<std::string> b;
+  MsgScrollBuffer<std::string> b(10, 3);
 
-  for (size_t i = 0; i < 10; i++)
+  for (size_t i = 0; i < 15; i++)
   {
     b.AddMessage(Util::StringFormat("Message %lu", (i + 1)));
   }
+
+  b.SetScrollState(MessageBufferScrollState::TOP);
+
+  printf("Use 'w' 's' to scroll. 'q' to exit.\n\n");
 
   b.Print();
 
@@ -42,10 +46,28 @@ int main(int argc, char* argv[])
       }
       break;
 
+      //
+      // 'break' from 'case' doesn't seem to work.
+      //
+      // ***********************************************************************
+      // *                                                                     *
+      // *                          Achievement unlocked:                      *
+      // *                 use goto in production code (kinda).                *
+      // *                                                                     *
+      // ***********************************************************************
+      case 'q':
+      case 'Q':
+      {
+        goto _exit;
+      }
+      break;
+
       default:
         break;
     }
   }
+
+_exit:
 
   return 0;
 }
