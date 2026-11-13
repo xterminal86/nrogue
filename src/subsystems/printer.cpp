@@ -3,7 +3,7 @@
 #include "application.h"
 #include "map.h"
 #include "util.h"
-#include "base64-strings.h"
+#include "embedded.h"
 
 #ifdef DEBUG_BUILD
 #include "logger.h"
@@ -57,9 +57,8 @@ void Printer::Init()
 #ifdef USE_SDL
 bool Printer::LoadTextTileset()
 {
-  auto res = Util::Base64_Decode(Base64Strings::Tileset8x16Base64);
-  auto bytes = Util::ConvertStringToBytes(res);
-  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
+  SDL_RWops* data = SDL_RWFromMem((uint8_t*)Embedded::Tileset8x16.data(),
+                                  Embedded::Tileset8x16.size());
   SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
   if (!surf)
   {
@@ -134,9 +133,8 @@ bool Printer::LoadSubstituteGraphicTileset()
 {
   Application::ApplicationData& appData = Game::gApp.AppData;
 
-  auto res = Util::Base64_Decode(Base64Strings::GraphicsTileset16x16Base64);
-  auto bytes = Util::ConvertStringToBytes(res);
-  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
+  SDL_RWops* data = SDL_RWFromMem((uint8_t*)Embedded::Tileset16x16.data(),
+                                  Embedded::Tileset16x16.size());
   SDL_Surface* surf = SDL_LoadBMP_RW(data, 1);
   if (!surf)
   {
@@ -176,9 +174,8 @@ bool Printer::LoadSubstituteGraphicTileset()
 
 bool Printer::SetWindowIcon()
 {
-  auto res = Util::Base64_Decode(Base64Strings::IconBase64);
-  auto bytes = Util::ConvertStringToBytes(res);
-  SDL_RWops* data = SDL_RWFromMem(bytes.data(), bytes.size());
+  SDL_RWops* data = SDL_RWFromMem((uint8_t*)Embedded::Icon.data(),
+                                  Embedded::Icon.size());
   if (data == nullptr)
   {
     ConsoleLog("[ERR] failed to read from memory! '%s'", SDL_GetError());
