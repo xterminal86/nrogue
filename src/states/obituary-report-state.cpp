@@ -84,6 +84,22 @@ void ObituaryReportState::HandleInput()
 
     // -------------------------------------------------------------------------
 
+    case NUMPAD_4:
+    {
+      _obituary->PageUp();
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
+    case NUMPAD_6:
+    {
+      _obituary->PageDown();
+    }
+    break;
+
+    // -------------------------------------------------------------------------
+
     case VK_CANCEL:
     case VK_ENTER:
       Game::gApp.ChangeState(GameStates::EXIT_GAME);

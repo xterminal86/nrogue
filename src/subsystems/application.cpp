@@ -436,7 +436,6 @@ void Application::CollectKills(StringV& writeTo,
   WriteObituaryLine(writeTo, "", asciiMode);
   WriteObituaryLine(writeTo, "**********    KILLS    **********", asciiMode);
   WriteObituaryLine(writeTo, "", asciiMode);
-  WriteObituaryLine(writeTo, "", asciiMode);
 
   for (auto& kvp : PlayerInstance.TotalKills)
   {
@@ -723,6 +722,12 @@ void Application::CollectGeneralInfo(StringV& writeTo,
   WriteObituaryLine(writeTo, "********** OBITUARY **********", asciiMode);
   WriteObituaryLine(writeTo, "", asciiMode);
 
+  WriteObituaryLine(
+    writeTo,
+    Util::StringFormat("Written at:     %s",
+                       Util::GetCurrentDateTimeString().data()),
+    asciiMode
+  );
   WriteObituaryLine(
     writeTo,
     Util::StringFormat("World seed was: 0x%s (%s)",
